@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول المحسن</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .particle-small {
+            width: 8px;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            animation: floatSmall 8s ease-in-out infinite;
+        }
+
+        .particle-medium {
+            width: 16px;
+            height: 16px;
+            background: rgba(0, 0, 0, 0.25);
+            animation: floatMedium 12s ease-in-out infinite;
+        }
+
+        .particle-large {
+            width: 24px;
+            height: 24px;
+            background: rgba(0, 0, 0, 0.15);
+            animation: floatLarge 16s ease-in-out infinite;
+        }
+
+        @keyframes floatSmall {
+            0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); opacity: 0.3; }
+            25% { transform: translateY(-20px) translateX(10px) rotate(90deg) scale(1.2); opacity: 0.6; }
+            50% { transform: translateY(-10px) translateX(-15px) rotate(180deg) scale(0.8); opacity: 0.4; }
+            75% { transform: translateY(-30px) translateX(5px) rotate(270deg) scale(1.1); opacity: 0.5; }
+        }
+
+        @keyframes floatMedium {
+            0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); opacity: 0.2; }
+            33% { transform: translateY(-40px) translateX(20px) rotate(120deg) scale(1.3); opacity: 0.5; }
+            66% { transform: translateY(-20px) translateX(-25px) rotate(240deg) scale(0.7); opacity: 0.3; }
+        }
+
+        @keyframes floatLarge {
+            0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); opacity: 0.15; }
+            20% { transform: translateY(-50px) translateX(30px) rotate(72deg) scale(1.4); opacity: 0.4; }
+            40% { transform: translateY(-30px) translateX(-40px) rotate(144deg) scale(0.6); opacity: 0.2; }
+            60% { transform: translateY(-60px) translateX(10px) rotate(216deg) scale(1.2); opacity: 0.35; }
+            80% { transform: translateY(-20px) translateX(-20px) rotate(288deg) scale(0.8); opacity: 0.25; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.5);
+            overflow: hidden;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 10;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: containerEntrance 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes containerEntrance {
+            0% { opacity: 0; transform: translateY(50px) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .container:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 35px 70px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.6);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: headerShimmer 4s infinite;
+        }
+
+        @keyframes headerShimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+            font-weight: 300;
+        }
+
+        .tabs {
+            display: flex;
+            background: #fafafa;
+            border-bottom: 1px solid #e9ecef;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-indicator {
+            position: absolute;
+            bottom: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #000000, #007bff);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 3px 3px 0 0;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+            width: 33.33%;
+            right: 66.66%;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 18px 15px;
+            text-align: center;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #6c757d;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tab.active {
+            color: #000000;
+            background: rgba(0, 0, 0, 0.02);
+            font-weight: 600;
+            transform: translateY(-1px);
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(0, 0, 0, 0.05);
+            color: #495057;
+            transform: translateY(-2px);
+        }
+
+        .form-container {
+            padding: 35px 30px;
+            background: white;
+            position: relative;
+        }
+
+        .form {
+            display: none;
+        }
+
+        .form.active {
+            display: block;
+            animation: formSlideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes formSlideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #212529;
+            font-weight: 600;
+            font-size: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #fafafa;
+            font-weight: 400;
+            position: relative;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #000000;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.08), 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .form-group input:hover:not(:focus) {
+            border-color: #dee2e6;
+            background: #f8f9fa;
+            transform: translateY(-1px);
+        }
+
+        .password-strength {
+            margin-top: 12px;
+            position: relative;
+            display: none;
+        }
+
+        .strength-track {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .strength-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            width: 0%;
+        }
+
+        .strength-weak { background: linear-gradient(90deg, #dc3545, #ff6b6b); width: 25%; }
+        .strength-fair { background: linear-gradient(90deg, #ffc107, #ffeb3b); width: 50%; }
+        .strength-good { background: linear-gradient(90deg, #17a2b8, #00bcd4); width: 75%; }
+        .strength-strong { background: linear-gradient(90deg, #28a745, #4caf50); width: 100%; }
+
+        .strength-text {
+            font-size: 12px;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .strength-weak-text { color: #dc3545; }
+        .strength-fair-text { color: #ffc107; }
+        .strength-good-text { color: #17a2b8; }
+        .strength-strong-text { color: #28a745; }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #333333 0%, #555555 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn:active { transform: translateY(-1px); }
+        .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        .admin-notice {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border: 1px solid #dee2e6;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-notice::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #000000, #333333);
+        }
+
+        .admin-notice h3 {
+            color: #212529;
+            margin-bottom: 8px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .admin-notice p {
+            color: #6c757d;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .forgot-password a {
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .forgot-password a:hover { color: #000000; }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            gap: 12px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #000000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-size: 15px;
+            cursor: pointer;
+            color: #495057;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        .success-message, .error-message {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            animation: messageSlide 0.5s ease;
+            position: relative;
+            border-right: 4px solid;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border-color: #28a745;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border-color: #dc3545;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        @media (max-width: 480px) {
+            .container { margin: 10px; max-width: calc(100% - 20px); }
+            .header { padding: 30px 20px; }
+            .header h1 { font-size: 26px; }
+            .form-container { padding: 25px 20px; }
+            .tab { padding: 15px 10px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles-container" id="particles"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>أهلاً بك</h1>
+            <p>سجل دخولك أو أنشئ حساباً جديداً</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-indicator"></div>
+            <button class="tab active" onclick="switchTab(0)">تسجيل الدخول</button>
+            <button class="tab" onclick="switchTab(1)">حساب جديد</button>
+            <button class="tab" onclick="switchTab(2)">المدير</button>
+        </div>
+
+        <div class="form-container">
+            <!-- Login Form -->
+            <form class="form active" id="loginForm">
+                <div class="success-message" id="loginSuccess"></div>
+                <div class="error-message" id="loginError"></div>
+                
+                <div class="form-group">
+                    <label for="loginEmail">البريد الإلكتروني</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">كلمة المرور</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">تذكرني</label>
+                </div>
+                
+                <button type="submit" class="btn">تسجيل الدخول</button>
+                
+                <div class="forgot-password">
+                    <a href="#" onclick="showForgotPassword()">نسيت كلمة المرور؟</a>
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form class="form" id="registerForm">
+                <div class="success-message" id="registerSuccess"></div>
+                <div class="error-message" id="registerError"></div>
+                
+                <div class="form-group">
+                    <label for="registerName">الاسم الكامل</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerEmail">البريد الإلكتروني</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPassword">كلمة المرور</label>
+                    <input type="password" id="registerPassword" required>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-track">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <div class="strength-text" id="strengthText"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">تأكيد كلمة المرور</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agreeTerms" required>
+                    <label for="agreeTerms">أوافق على الشروط والأحكام</label>
+                </div>
+                
+                <button type="submit" class="btn">إنشاء حساب</button>
+            </form>
+
+            <!-- Admin Form -->
+            <form class="form" id="adminForm">
+                <div class="admin-notice">
+                    <h3>منطقة المدير</h3>
+                    <p>هذه المنطقة مخصصة للمديرين فقط. يرجى التأكد من صحة بياناتك قبل الدخول.</p>
+                </div>
+                
+                <div class="success-message" id="adminSuccess"></div>
+                <div class="error-message" id="adminError"></div>
+                
+                <div class="form-group">
+                    <label for="adminUsername">اسم المدير</label>
+                    <input type="text" id="adminUsername" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="adminPassword">كلمة مرور المدير</label>
+                    <input type="password" id="adminPassword" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="adminCode">رمز التحقق</label>
+                    <input type="text" id="adminCode" placeholder="أدخل رمز التحقق" required>
+                </div>
+                
+                <button type="submit" class="btn">دخول المدير</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                const size = Math.random() > 0.7 ? 'large' : Math.random() > 0.4 ? 'medium' : 'small';
+                particle.className = `particle particle-${size}`;
+                
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (8 + Math.random() * 10) + 's';
+                
+                container.appendChild(particle);
+            }
+        }
+
+        let currentTab = 0;
+        function switchTab(tabIndex) {
+            const tabs = document.querySelectorAll('.tab');
+            const forms = document.querySelectorAll('.form');
+            const indicator = document.querySelector('.tab-indicator');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            forms.forEach(form => form.classList.remove('active'));
+            
+            tabs[tabIndex].classList.add('active');
+            forms[tabIndex].classList.add('
